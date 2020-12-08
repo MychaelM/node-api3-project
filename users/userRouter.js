@@ -1,5 +1,6 @@
 const express = require('express');
 const users = require('./userDb');
+const { checkUserId } = require("./userMiddleware");
 
 const router = express.Router();
 
@@ -7,8 +8,8 @@ router.post('/', (req, res) => {
   // do your magic!
 });
 
-router.post('/:id/posts', (req, res) => {
-  // do your magic!
+router.post('/:id/posts', checkUserId(), (req, res) => {
+  
 });
 
 router.get('/', (req, res) => {
@@ -25,8 +26,8 @@ router.get('/', (req, res) => {
   })
 });
 
-router.get('/:id', (req, res) => {
-  // do your magic!
+router.get('/:id',checkUserId(), (req, res) => {
+  res.status(200).json(req.user);
 });
 
 router.get('/:id/posts', (req, res) => {
