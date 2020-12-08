@@ -10,6 +10,7 @@ module.exports = {
 };
 
 function get() {
+  // return Promise.reject;
   return db('users');
 }
 
