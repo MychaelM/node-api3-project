@@ -47,7 +47,19 @@ router.get("/:id/posts", checkUserId(), (req, res) => {
 });
 
 router.delete("/:id", checkUserId(), (req, res) => {
-  // do your magic!
+  users.remove(req.params.id)
+    .then((count) => {
+      if (count > 0) {
+        res.status(200).json({
+          message: "User has been deleted",
+          user: req.user
+        })
+      }
+      }
+    )
+    .catch((err) => {
+      next(err)
+    })
 });
 
 router.put("/:id", checkUserId(), (req, res) => {
@@ -74,8 +86,8 @@ router.put("/:id", checkUserId(), (req, res) => {
 //   next();
 // }
 
-function validatePost(req, res, next) {
-  // do your magic!
-}
+// function validatePost(req, res, next) {
+//   // do your magic!
+// }
 
 module.exports = router;
