@@ -1,11 +1,17 @@
 const express = require('express');
 const users = require('./userDb');
-const { checkUserId } = require("./userMiddleware");
+const { checkUserId, validateUser } = require("./userMiddleware");
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  // do your magic!
+router.post('/', validateUser(), (req, res) => {
+  users.insert(req.body)
+    .then((user) => {
+      res.status(201).json(user)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
 });
 
 router.post('/:id/posts', checkUserId(), (req, res) => {
@@ -54,9 +60,19 @@ router.put("/:id", checkUserId(), (req, res) => {
 //   // do your magic!
 // }
 
-function validateUser(req, res, next) {
-  // do your magic!
-}
+// function validateUser(req, res, next) {
+//   if (!req.body) {
+//     console.log(req.body);
+//     res.status(400).json({
+//       message: "Missing User Data",
+//     });
+//   } else if (!req.body.name) {
+//     res.status(400).json({
+//       message: "missing required name field",
+//     });
+//   }
+//   next();
+// }
 
 function validatePost(req, res, next) {
   // do your magic!

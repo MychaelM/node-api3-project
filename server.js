@@ -4,6 +4,8 @@ const postRoutes = require("./posts/postRouter");
 
 const server = express();
 
+server.use(express.json());
+
 server.use(logger);
 
 server.get('/', (req, res) => {

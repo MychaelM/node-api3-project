@@ -19,6 +19,23 @@ function checkUserId () {
   }
 }
 
+function validateUser () {
+  return (req, res, next) => {
+    if (!req.body) {
+      console.log(req.body)
+      res.status(400).json({
+        message: "Missing User Data"
+      })
+    } else if (!req.body.name) {
+      res.status(400).json({
+        message: "missing required name field",
+      });
+    }
+    next();
+  }
+}
+
 module.exports = {
   checkUserId,
+  validateUser,
 }
