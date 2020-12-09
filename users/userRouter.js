@@ -1,6 +1,7 @@
 const express = require('express');
 const users = require('./userDb');
-const { checkUserId, validateUser } = require("./userMiddleware");
+const posts = require('../posts/postDb');
+const { checkUserId, validateUser, validatePost } = require("./userMiddleware");
 
 const router = express.Router();
 
@@ -14,14 +15,33 @@ router.post('/', validateUser(), (req, res) => {
     })
 });
 
-router.post('/:id/posts', checkUserId(), (req, res) => {
-  
+router.post('/:id/posts', validatePost(), checkUserId(), (req, res) => {
+  posts.insert(req.body)
+    .then((post) => {
+      res.status(201).json(post)
+    })
+    .catch((err) => {
+      next()
+    })
 });
 
 router.get('/', (req, res) => {
   users.get()
   .then((users) => {
     res.status(200).json(users);
+  })
+  .catch((err) => {
+    next(err)
+    // console.log(err)
+    // res.status(500).json({
+    //   message: "Error retreiving users"
+    // })
+  })
+});
+router.get('/posts', (req, res) => {
+  posts.get()
+  .then((posts) => {
+    res.status(200).json(posts);
   })
   .catch((err) => {
     next(err)
@@ -97,7 +117,16 @@ router.put("/:id", validateUser(), checkUserId(), (req, res) => {
 // }
 
 // function validatePost(req, res, next) {
-//   // do your magic!
+//     if (!req.body.text) {
+//       res.status(400).json({
+//         message: "missing required text field",
+//       });
+//     } else if (!req.body) {
+//     res.status(400).json({
+//       message: "missing post data"
+//     })
+//     }
+//     next();
 // }
 
 module.exports = router;
